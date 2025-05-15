@@ -29,7 +29,7 @@ CustomLog /var/log/apache2/other_vhosts_access.log combined
 
 ![](Images/img1.png)
 
-- **LogLevel**
+- __LogLevel__
 
 `LogLevel warn` define el nivel de detalle de los mensajes que Apache registra en los logs de error.
 
@@ -37,29 +37,29 @@ El valor de seguridad `LogLevel` puede tomar uno de estos valores:
 
 |Nivel		        |Descripción
 |-----------------------|---------------------------------------------------------------------|
-|**emerg** 		|Situaciones críticas que hacen que el servidor deje de funcionar.|
-|**alert**		|Eventos graves que requieren atención inmediata.|
-|**crit**		|Errores críticos en el servidor.|
-|**error**		|Errores generales que no detienen el servidor.|
-|**warn**		|Advertencias que pueden indicar problemas futuros. (Valor recomendado en producción)|
-|**notice**		|Mensajes informativos importantes.|
-|**info**		|Información detallada sobre la operación del servidor.|
-|**debug**		|Información muy detallada para depuración.|
-|**trace1 - trace8** 	|Nivel de depuración más detallado (usado para desarrolladores).|
+|__emerg__ 		|Situaciones críticas que hacen que el servidor deje de funcionar.|
+|__alert__		|Eventos graves que requieren atención inmediata.|
+|__crit__		|Errores críticos en el servidor.|
+|__error__		|Errores generales que no detienen el servidor.|
+|__warn__		|Advertencias que pueden indicar problemas futuros. (Valor recomendado en producción)|
+|__notice__		|Mensajes informativos importantes.|
+|__info__		|Información detallada sobre la operación del servidor.|
+|__debug__		|Información muy detallada para depuración.|
+|__trace1 - trace8__ 	|Nivel de depuración más detallado (usado para desarrolladores).|
 
 
 Si se cambia `LogLevel warn` a `LogLevel debug`, Apache registrará más detalles útiles para diagnóstico, pero puede generar archivos de log muy grandes.
 
-- **ErrorLog ${APACHE_LOG_DIR}/error.log**
+- __ErrorLog ${APACHE_LOG_DIR}/error.log__
 
  `ErrorLog ${APACHE_LOG_DIR}/error.log` define la ubicación donde Apache guarda los logs de errores.
 
 
-**Posibilidades adicionales**: Se puede redirigir los logs de error a un archivo específico o incluso a `syslog`:
+__Posibilidades adicionales__: Se puede redirigir los logs de error a un archivo específico o incluso a `syslog`:
 
 `ErrorLog "|/usr/bin/logger -t apache_error"` enviaría los logs al sistema de logging de Linux.
 
-**CustomLog ${APACHE_LOG_DIR}/other_vhosts_access.log combined**
+__CustomLog ${APACHE_LOG_DIR}/other_vhosts_access.log combined__
 
 `CustomLog /var/log/apache2/other_vhosts_access.log combined`  define la ubicación y el formato del archivo donde se registran las solicitudes de acceso al servidor.
 
@@ -67,11 +67,11 @@ Puede tomar uno de los siguientes valores:
 
 |Formato 	 	|Descripción
 |-----------------------|------------------------------------------------------------------------------------------|
-|**combined**		|Formato extendido con más información (IP, fecha, agente de usuario, etc.). (Recomendado)|
-|**common**		|Formato básico sin detalles de referer ni agente de usuario.|
-|**vhost_combined** 	|Similar a combined, pero muestra el VirtualHost asociado.|
-|**json**		|Formato JSON estructurado.|
-|**custom**		|Puedes definir tu propio formato personalizado.|
+|__combined__		|Formato extendido con más información (IP, fecha, agente de usuario, etc.). (Recomendado)|
+|__common__		|Formato básico sin detalles de referer ni agente de usuario.|
+|__vhost_combined__ 	|Similar a combined, pero muestra el VirtualHost asociado.|
+|__json__		|Formato JSON estructurado.|
+|__custom__		|Puedes definir tu propio formato personalizado.|
 
 
 Ejemplo de un log en formato `combined`:
@@ -100,13 +100,13 @@ service apache2 restart
 
 Como estamos trabajando con un escenario multicontenedor docker, hay algunas peculiaridades. Por ejemplo, parte de los logs se guardan en el archivo `other_vhosts_access.log` en vez de `access.log`. Si las consultas no dan resultados prueba con `access.log`.
 
-**Monitorear logs en tiempo real con `tail -f`:**
+__Monitorear logs en tiempo real con `tail -f`:__
 
 ```bash
 tail -f /var/log/apache2/other_vhosts_access.log
 tail -n 50 /var/log/apache2/error.log
 ```
-**Mostrar los logs con paginación (para leer cómodamente)**
+__Mostrar los logs con paginación (para leer cómodamente)__
 
 Si el archivo es muy grande less o more:
 
@@ -115,7 +115,7 @@ less /var/log/apache2/other_vhosts_access.log
 ```
 
 
-**Buscar accesos a la página de administración**
+__Buscar accesos a la página de administración__
 
 Detectar intentos de acceso a rutas sensibles como /admin:
 
@@ -125,7 +125,7 @@ grep "admin" /var/log/apache2/other_vhosts_access.log
 
 ![](images/lm3.png)
 
-**Buscar intentos de ejecución de comandos en la URL**
+__Buscar intentos de ejecución de comandos en la URL__
 
 Detectar posibles ataques de inyección de comandos:
 
@@ -136,7 +136,7 @@ grep "cmd=" /var/log/apache2/other_vhosts_access.log
 
 ![](images/lm4.png)
 
-**Buscar todas las peticiones de un usuario específico (IP)**
+__Buscar todas las peticiones de un usuario específico (IP)__
 
 Si se quiere revisar todas las solicitudes realizadas por una IP sospechosa (ej. 172.20.0.5):
 
@@ -146,7 +146,7 @@ grep "172.20.0.5" /var/log/apache2/other_vhosts_access.log
 ![](images/lm5.png)
 
 
-**Buscar intentos de inyección SQL en la URL**
+__Buscar intentos de inyección SQL en la URL__
 
 Analizar si hay consultas maliciosas en las peticiones:
 
@@ -156,7 +156,7 @@ grep -E "SELECT|INSERT|UPDATE|DELETE|DROP|UNION" /var/log/apache2/error.log
 ```
 ![](images/lm6.png)
 
-**Ver errores HTTP 404 (páginas no encontradas)**
+__Ver errores HTTP 404 (páginas no encontradas)__
 
 Útil para detectar accesos a rutas inexistentes (posible escaneo de vulnerabilidades):
 
@@ -166,7 +166,7 @@ grep " 404 " /var/log/apache2/other_vhosts_access.log
 ```
 
 
-**Filtrar por fecha específica**
+__Filtrar por fecha específica__
 
 Ejemplo: Ver accesos del 28 de febrero de 2025:
 
@@ -175,7 +175,7 @@ grep "28/Feb/2025" /var/log/apache2/other_vhosts_access.log
 
 ```
 
-**Detectar ataques de fuerza bruta**
+__Detectar ataques de fuerza bruta__
 
 Ver intentos de acceso fallidos en /login:
 
@@ -184,7 +184,7 @@ grep "/login" /var/log/apache2/other_vhosts_access.log | grep " 401 "
 ```
 
 
-**Contar cuántas veces una IP ha intentado acceder**
+__Contar cuántas veces una IP ha intentado acceder__
 
 Para ver si una IP está haciendo muchas peticiones sospechosas:
 
@@ -198,7 +198,7 @@ Esto mostrará las 10 IPs con más solicitudes.
 ![](images/lm7.png)
 
 
-**Buscar User-Agents sospechosos**
+__Buscar User-Agents sospechosos__
 
 Identificar bots o scrapers accediendo al servidor:
 
@@ -207,7 +207,7 @@ grep -E "bot|crawler|spider" /var/log/apache2/other_vhosts_access.log
 ```
 
 
-**Ver actividad en tiempo real y filtrar por palabra clave**
+__Ver actividad en tiempo real y filtrar por palabra clave__
 
 Monitorear en vivo cualquier intento de acceso a /wp-admin (Página de administración de WordPress por defecto):
 
@@ -225,14 +225,14 @@ Implementar medidas de seguridad adecuadas puede ayudar a prevenir ataques y mej
 ## 4.1. Configurar alertas automáticas con Fail2Ban
 
 
-**¿Qué es Fail2Ban?**
+__¿Qué es Fail2Ban?__
 
 Fail2Ban es una herramienta que monitorea los logs en busca de patrones sospechosos (como múltiples intentos fallidos de login) y bloquea automáticamente la IP atacante mediante reglas de firewall.
 
 
 ###. Instalación de Fail2Ban (Ubuntu/Debian) en maquina anfitriona
 
-En esta ocasión, vamos a instalar `fail2ban` en nuestra **máquina anfitriona** en vez de  en docker. De esta manera también podrá monitorizar las conexiones `ssh`. 
+En esta ocasión, vamos a instalar `fail2ban` en nuestra __máquina anfitriona__ en vez de  en docker. De esta manera también podrá monitorizar las conexiones `ssh`. 
 
 maquina anfitrion `terminal`
 ```bash
@@ -240,7 +240,7 @@ sudo apt update
 sudo apt install fail2ban -y
 ```
 
-**2. Configurar Fail2Ban para Apache**
+__2. Configurar Fail2Ban para Apache__
 
 Crear una copia del archivo de configuración predeterminado
 
@@ -269,7 +269,7 @@ Esto bloqueará una IP por 1 hora si realiza más de 5 intentos fallidos.
 
 
 
-**3. Reiniciar Fail2Ban para aplicar cambios**
+__3. Reiniciar Fail2Ban para aplicar cambios__
 
 ```bash
 sudo service fail2ban restart
@@ -279,9 +279,9 @@ sudo systemctl enable fail2ban
 
 ### Configuración de Fail2Ban en un entorno LAMP con Docker
 
-Este documento describe cómo integrar **Fail2Ban** como un contenedor independiente dentro de un entorno **LAMP** desplegado con Docker Compose. Se utilizará la imagen oficial `linuxserver/fail2ban` y se conectará con los logs de Apache, MySQL, etc.
+Este documento describe cómo integrar __Fail2Ban__ como un contenedor independiente dentro de un entorno __LAMP__ desplegado con Docker Compose. Se utilizará la imagen oficial `linuxserver/fail2ban` y se conectará con los logs de Apache, MySQL, etc.
 
-**1. Requisitos previos**
+__1. Requisitos previos__
 
 * Docker y Docker Compose instalados.
 * Estructura típica de proyecto LAMP en directorios:
@@ -292,7 +292,7 @@ Este documento describe cómo integrar **Fail2Ban** como un contenedor independi
   * `./config/fail2ban/` (donde guardaremos la configuración de Fail2Ban)
 
 
-**2. `docker-compose.yml`**
+__2. `docker-compose.yml`__
 
 ```yaml
 version: "3"
@@ -392,7 +392,7 @@ services:
 
 ---
 
-**3. Configuración de Fail2Ban**
+__3. Configuración de Fail2Ban__
 
  - `config/fail2ban/jail.local`
 
@@ -423,7 +423,7 @@ ignoreregex =
 
 ---
 
-**4. Instrucciones de uso**
+__4. Instrucciones de uso__
 
 1. Crea las carpetas necesarias si no existen:
 
@@ -446,7 +446,7 @@ docker logs -f <nombre_contenedor_fail2ban>
 ```
 
 
-**5. Resultado esperado**
+__5. Resultado esperado__
 
 Fail2Ban monitoreará los logs de Apache y aplicará bans (bloqueos) a IPs que generen repetidos intentos fallidos de autenticación.
 
@@ -454,34 +454,34 @@ Fail2Ban monitoreará los logs de Apache y aplicará bans (bloqueos) a IPs que g
 
 ### Funcionamiento fail2ban
 
-**Ver las IPs bloqueadas**
+__Ver las IPs bloqueadas__
 
 ```bash
 sudo fail2ban-client status apache-auth
 ```
 
 
-**Ver reglas de iptables creadas por Fail2Ban**
+__Ver reglas de iptables creadas por Fail2Ban__
 
 ```bash
 sudo iptables -L -n --line-numbers
 ```
 
 
-**Desbloquear una IP manualmente**
+__Desbloquear una IP manualmente__
 
 ```bash
 sudo fail2ban-client unban <IP>
 ```
 
 
-**Bloquear una IP manualmente**
+__Bloquear una IP manualmente__
 
 ```bash
 sudo fail2ban-client set apache-auth banip <IP>
 ```
 
-**Ejercicio**
+__Ejercicio__
 
 Probar a bloquear una IP (9.9.9.9), revisar las reglas iptables creadas, así como las IP bloqueadas y desbloquear la IP
 
@@ -495,14 +495,14 @@ Probar a bloquear una IP (9.9.9.9), revisar las reglas iptables creadas, así co
 Un SIEM recopila, analiza y correlaciona eventos de seguridad desde múltiples fuentes, incluyendo logs de Apache, bases de datos y firewall, permitiendo una mejor detección de amenazas.
 
 
- **SIEM Populares** 
+ __SIEM Populares__ 
 
-| **Herramienta**					|**Descripción**                                                          |
+| __Herramienta__					|__Descripción__                                                          |
 |-------------------------------------------------------|-------------------------------------------------------------------------|
-|**ELK Stack** (Elasticsearch, Logstash, Kibana) 	|Sistema Open Source para recolectar y visualizar logs. Ideal para Apache.|
-|**Splunk**						|Potente solución comercial para análisis de eventos de seguridad.        |
-|**Wazuh**						|SIEM gratuito basado en OSSEC con integración en Elasticsearch.          |
-|**Graylog**						|Alternativa de código abierto con buenas capacidades de análisis.        |
+|__ELK Stack__ (Elasticsearch, Logstash, Kibana) 	|Sistema Open Source para recolectar y visualizar logs. Ideal para Apache.|
+|__Splunk__						|Potente solución comercial para análisis de eventos de seguridad.        |
+|__Wazuh__						|SIEM gratuito basado en OSSEC con integración en Elasticsearch.          |
+|__Graylog__						|Alternativa de código abierto con buenas capacidades de análisis.        |
 
 
 ---
@@ -512,15 +512,15 @@ Un SIEM recopila, analiza y correlaciona eventos de seguridad desde múltiples f
 ELK Stack (Elasticsearch, Logstash, Kibana) es una solución poderosa para monitoreo y análisis de logs en tiempo real. Integrarlo con Apache permite visualizar métricas de tráfico, detectar anomalías y mejorar la seguridad.
 
 
-- **Elasticsearch**: Almacena y permite búsquedas en los logs de Apache.
+- __Elasticsearch__: Almacena y permite búsquedas en los logs de Apache.
 
-- **Logstash**: Procesa y envía los logs de Apache a Elasticsearch.
+- __Logstash__: Procesa y envía los logs de Apache a Elasticsearch.
 
-- **Kibana**: Proporciona dashboards interactivos para visualizar logs y métricas de Apache.
+- __Kibana__: Proporciona dashboards interactivos para visualizar logs y métricas de Apache.
 
 Ya que vamos a hacer un ejercicio rápido, lo vamos a instalar en nuestra máquina anfitriona. En producción, lo crearíamos en docker con una máquina para cada servicio.
 
-**1. Agregar el repositorio de Elastic**
+__1. Agregar el repositorio de Elastic__
 
 Ejecutar los siguientes comandos:
 
@@ -533,21 +533,21 @@ echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://arti
 Nota: Si se desea una versión específica, cambiar 9.x por la versión deseada.
 
 
-**2. Actualizar los repositorios e instalar Elasticsearch, Logstash y Kibana**
+__2. Actualizar los repositorios e instalar Elasticsearch, Logstash y Kibana__
 
 ```bash
 sudo apt update
 sudo apt install elasticsearch logstash kibana -y
 ```
 
-**3. Iniciar y habilitar los servicios**
+__3. Iniciar y habilitar los servicios__
 
 Como estamos en docker, iniciamos los servicios para probar. Tendríamos que habilitarlos para que en el arranque lo hagan automáticamente.
 ```bash
 systemctl enable --now elasticsearch logstash kibana
 ```
 
-**4. Configurar Elasticsearch**
+__4. Configurar Elasticsearch__
 
 Guardamos una copia del archivo de configuración de Elasticsearch y editamos:
 
@@ -589,7 +589,7 @@ Si funciona correctamente, se debería ver una respuesta con información del se
 ![](images/lm9.png)
 
 
-**5. Configurar Logstash para Apache**
+__5. Configurar Logstash para Apache__
 
 Crear un archivo de configuración en Logstash
 
@@ -636,7 +636,7 @@ Nos mostrará los logs de logstash
 
 ![](images/lm10.png)
 
-**6. Configurar Kibana**
+__6. Configurar Kibana__
 
 Editar la configuración de Kibana
 
@@ -668,7 +668,7 @@ Al darle al enlace de "Explore my own" accedemos a nuestros servicios:
 ![](images/lm13.png)
 
 
-**7. Instalar y configurar Filebeat para Apache**
+__7. Instalar y configurar Filebeat para Apache__
 
 - Instalar Filebeat
 
@@ -734,7 +734,7 @@ Verificar que Filebeat está enviando logs
 sudo filebeat test output
 ```
 
-**8. Verificar que los logs de Apache están en Kibana**
+__8. Verificar que los logs de Apache están en Kibana__
 
 Acceder a Kibana desde el navegador: `http://localhost:5601`
 
@@ -744,7 +744,7 @@ En el menú lateral “Management” seleccionar "Stack Management" → "Data Vi
 
 ![](images/lm17.png)
 
-Si todo está configurado correctamente ir a la sección **Analytics → Discover**, buscar el índice filebeat-* y se debería ver los logs en tiempo real.
+Si todo está configurado correctamente ir a la sección __Analytics → Discover__, buscar el índice filebeat-* y se debería ver los logs en tiempo real.
 
 ![](images/lm18.png)
 
@@ -767,7 +767,7 @@ Si todo está configurado correctamente ir a la sección **Analytics → Discove
 
 Para eliminar los cambios que hemos realizado en esta actividad y volver a dejar todo en su sitio de partida:
 
-**En nuestro equipo anfitrión** 
+__En nuestro equipo anfitrión__ 
 
 ```bash
 sudo apt remove --purge fail2ban elasticsearch logstash kibana filebeat -y
