@@ -27,7 +27,8 @@ CustomLog /var/log/apache2/other_vhosts_access.log combined
 
 ### Explicación de las diferentes directavas
 
-![](images/lm1.png)
+![](Images/img1.png)
+
 - **LogLevel**
 
 `LogLevel warn` define el nivel de detalle de los mensajes que Apache registra en los logs de error.
